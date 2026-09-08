@@ -1,6 +1,6 @@
 CC = g++
 FLAGS = -m32 -O3 -std=c++20 -fsanitize=address -pthread -Iinclude
-SRC = src/main.cpp src/complex.cpp src/signal.cpp src/signal_generator.cpp
+SRC = src/main.cpp src/complex.cpp src/signal.cpp src/signal_generator.cpp src/convolution.cpp
 
 OBJ = $(SRC:.cpp=.o)
 EXEC = dsplib

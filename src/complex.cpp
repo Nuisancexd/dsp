@@ -9,7 +9,7 @@ complex& complex::operator+=(complex& sample)
     return *this;
 }
 
-complex& complex::operator-=(complex& sample)
+complex& complex::operator-=(const complex& sample)
 {
     i -= sample.i;
     q -= sample.q;
@@ -76,7 +76,7 @@ complex& complex::operator_div(float sample_i, float sample_q)
     return *this;
 }
 
-float complex::amplitude() const
+float complex::abs_amplitude() const
 {
     return sqrt(i * i + q * q);
 }

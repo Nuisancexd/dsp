@@ -11,7 +11,7 @@ public:
     complex(float i_, float q_) : i(i_), q(q_) {}
 
     complex& operator+=(complex& sample);
-    complex& operator-=(complex& sample);
+    complex& operator-=(const complex& sample);
     complex& operator*=(const complex& sample);
     complex& operator/=(complex& sample);
     complex& operator*=(float scalar);
@@ -21,7 +21,9 @@ public:
     complex& operator_mul(float sample_i, float sample_q);
     complex& operator_div(float sample_i, float sample_q);
 
-    float amplitude() const;
+    void zero_sample() { i = 0.0f; q = 0.0f; };
+
+    float abs_amplitude() const;
     float signal_amplitude(complex& signal) const;
     float power() const;
     float signal_power(complex& signal) const;

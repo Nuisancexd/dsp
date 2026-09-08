@@ -9,7 +9,7 @@
 #define TO_FLOAT(x) static_cast<float>(x)
 #define TO_INT(x) static_cast<int>(x)
 
-signal signal_generator::impulse(size_t size, size_t position, float sample_rate, complex amplitude)
+signal signal_generator::impulse(size_t size, size_t position, size_t sample_rate, complex amplitude)
 {
     std::vector<complex> samples(size);
     if(size > position)
@@ -17,7 +17,7 @@ signal signal_generator::impulse(size_t size, size_t position, float sample_rate
     return signal(std::move(samples), sample_rate);
 }
 
-signal signal_generator::sum_shifted_impulse(size_t size, size_t position, float sample_rate, complex amplitude)
+signal signal_generator::sum_shifted_impulse(size_t size, size_t position, size_t sample_rate, complex amplitude)
 {
     std::vector<complex> samples(size);
     for(size_t i = position; i < size; ++i)
@@ -26,7 +26,7 @@ signal signal_generator::sum_shifted_impulse(size_t size, size_t position, float
     return signal(std::move(samples), sample_rate);
 }
 
-signal signal_generator::cumulative_sum_impulse(size_t size, size_t position, float sample_rate, complex amplitude)
+signal signal_generator::cumulative_sum_impulse(size_t size, size_t position, size_t sample_rate, complex amplitude)
 {
     std::vector<complex> samples;
     samples.reserve(size);
@@ -40,7 +40,7 @@ signal signal_generator::cumulative_sum_impulse(size_t size, size_t position, fl
     return signal(std::move(samples), sample_rate);
 }
 
-signal signal_generator::rectangular_pulse(size_t size, size_t N, float sample_rate, complex amplitude)
+signal signal_generator::rectangular_pulse(size_t size, size_t N, size_t sample_rate, complex amplitude)
 {
     if(2 * N + 1 > size)
         throw std::invalid_argument(" ");
@@ -53,7 +53,7 @@ signal signal_generator::rectangular_pulse(size_t size, size_t N, float sample_r
     return signal(std::move(samples), sample_rate);
 }
 
-signal signal_generator::triangular_pulse(size_t size, size_t N, float sample_rate, complex amplitude)
+signal signal_generator::triangular_pulse(size_t size, size_t N, size_t sample_rate, complex amplitude)
 {
     if(2 * N + 1 > size || N == 0)
         throw std::invalid_argument(" ");
@@ -64,19 +64,19 @@ signal signal_generator::triangular_pulse(size_t size, size_t N, float sample_ra
     {
         n = static_cast<float>(i);
         samples[i] = amplitude;
-        samples[i] *= 1.0f - fabs(static_cast<float>(n) / static_cast<float>(N));
+        samples[i] *= 1.0f - fabs(TO_FLOAT(n) / TO_FLOAT(N));
     }
     for(size_t i = size - N; i < size; ++i)
     {
-        n = static_cast<float>(i) - static_cast<float>(size);
+        n = TO_FLOAT(i) - TO_FLOAT(size);
         samples[i] = amplitude;
-        samples[i] *= 1.0f - fabs(n) / static_cast<float>(N);
+        samples[i] *= 1.0f - fabs(n) / TO_FLOAT(N);
     }
 
     return signal(std::move(samples), sample_rate);
 }
 
-signal signal_generator::sinc_pulse(size_t size, size_t N, float sample_rate, complex amplitude)
+signal signal_generator::sinc_pulse(size_t size, size_t N, size_t sample_rate, complex amplitude)
 {
     if(N == 0)
         throw std::invalid_argument(" ");
@@ -102,16 +102,61 @@ signal signal_generator::sinc_pulse(size_t size, size_t N, float sample_rate, co
     return signal(std::move(samples), sample_rate);
 }
 
-signal signal_generator::sinusoid(size_t size, int freq_hz, int sample_rate, float amplitude, float phase_rad)
+signal signal_generator::exponential(size_t size, size_t freq_hz, size_t sample_rate, float amplitude, float phase_rad)
 {
     std::vector<complex> samples(size);
-    const float omega = 2.0f * static_cast<float>(M_PI) * freq_hz * sample_rate;
+    const float omega = 2.0f * TO_FLOAT(M_PI) * TO_FLOAT(freq_hz) / TO_FLOAT(sample_rate);
     float phase;
-    for(int n = 0; n < size; ++n)
+    for(size_t n = 0; n < size; ++n)
     {
         phase = omega * n + phase_rad;
         samples[n] = complex(amplitude * cos(phase), amplitude * sin(phase));
     }
 
     return signal(std::move(samples), sample_rate);
+}
+
+signal signal_generator::sinusoid(size_t size, size_t freq_hz, size_t sample_rate, float amplitude, float phase_rad)
+{
+    std::vector<complex> samples(size);
+    const float omega = 2.0f * TO_FLOAT(M_PI) * TO_FLOAT(freq_hz) / TO_FLOAT(sample_rate);
+    float phase;
+    for(size_t n = 0; n < size; ++n)
+    {
+        phase = omega * n + phase_rad;
+        samples[n] = complex(amplitude * cos(phase), 0.0f);
+    }
+
+    return signal(std::move(samples), sample_rate);
+}
+
+size_t signal_generator::signal_period(size_t freq_hz, size_t sample_rate)
+{
+    if(freq_hz == 0)
+        return 1;
+
+    size_t tmp, a = freq_hz, b = sample_rate;
+    while(b != 0)
+    {
+        tmp = b;
+        b = a % b;
+        a = tmp;
+    }
+
+    return sample_rate / a;
+}
+
+bool signal_generator::is_signal_periodic(const signal& signal, size_t N)
+{
+    if(N == 0 || N >= signal.size())
+        return false;
+
+    for(size_t i = 0; i + N < signal.size(); ++i)
+    {
+        complex diff = signal[i];
+        diff -= signal[i + N];
+        if(diff.abs_amplitude() > 1e-4f)
+            return false;
+    }
+    return true;
 }

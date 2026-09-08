@@ -12,7 +12,7 @@ float signal::absolute_sum()
 {
     float sum;
     for(auto& sample : samples)
-        sum += sample.amplitude();
+        sum += sample.abs_amplitude();
     return sum;
 }
 

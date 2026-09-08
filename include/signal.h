@@ -18,7 +18,9 @@ public:
     size_t size() { return samples.size(); }
     size_t size() const { return samples.size(); }
     bool empty() { return samples.empty(); }
+    bool empty() const { return samples.empty(); }
     float get_sample_rate() { return sample_rate; }
+    float get_sample_rate() const { return sample_rate; }
 
     complex& operator[](size_t i) { return samples[i]; }
     const complex& operator[](size_t i) const { return samples[i]; }

@@ -31,6 +31,13 @@ complex operator*(complex l_sample, const complex& r_sample)
     return l_sample;
 }
 
+complex operator+(complex l_sample, const complex& r_sample)
+{
+    l_sample.i += r_sample.i;
+    l_sample.q += r_sample.q;
+    return l_sample;
+}
+
 complex& complex::operator/=(complex& sample)
 {
     // z1/z2 = (z1 * z2_*) / (z2 * z1_*) = (z1.i * z2.i + z1.q * z2.q) + i(z1.q * z2.i - z1.i * z2.q) / z2^2

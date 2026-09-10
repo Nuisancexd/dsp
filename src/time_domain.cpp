@@ -1,7 +1,8 @@
 #include "time_domain.h"
 
 #include <complex.h>
-#include <math.h>
+
+#include <cmath>
 #include <stdexcept>
 #include <vector>
 

@@ -35,6 +35,6 @@ public:
 };
 
 complex operator*(complex l_sample, const complex& r_sample);
-
+complex operator+(complex l_sample, const complex& r_sample);
 
 #endif

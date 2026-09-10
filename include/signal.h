@@ -9,10 +9,11 @@ class signal
 {
 private:
     std::vector<complex> samples;
-    float sample_rate;
+    float sample_rate = 1.0f;
 public:
 
     signal() {}
+    explicit signal(std::vector<complex> samples_) : samples(std::move(samples_)) {}
     explicit signal(std::vector<complex> samples_, float sample_rate_) : samples(std::move(samples_)), sample_rate(sample_rate_) {}
 
     size_t size() { return samples.size(); }

@@ -23,6 +23,11 @@ public:
 
     void zero_sample() { i = 0.0f; q = 0.0f; };
 
+    complex& conj_in();
+    complex conj() const;
+    complex& conj_mult_in(const complex& sample);
+    complex conj_mult(const complex& sample) const;
+
     float abs_amplitude() const;
     float signal_amplitude(complex& signal) const;
     float power() const;
@@ -36,5 +41,6 @@ public:
 
 complex operator*(complex l_sample, const complex& r_sample);
 complex operator+(complex l_sample, const complex& r_sample);
+complex operator-(complex l_sample, const complex& r_sample);
 
 #endif

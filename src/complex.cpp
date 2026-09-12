@@ -1,6 +1,42 @@
 #include "complex.h"
 
-#include <math.h>
+#include <cmath>
+
+complex& complex::conj_in()
+{
+    q = -q;
+    return *this;
+}
+
+complex complex::conj() const
+{
+    return complex(i, -q);
+}
+
+complex& complex::conj_mult_in(const complex& sample)
+{
+    //  (z1.i + z1.q) * (z2.i - z2.q)
+    float i_src = i;
+    i = i * sample.i + q * sample.q;
+    q = q * sample.i - i_src * sample.q;
+    return *this;
+}
+
+complex complex::conj_mult(const complex& sample) const
+{
+    //  (z1.i + z1.q) * (z2.i - z2.q)
+    /*
+        z1.i * z2.i + z1.i * -z2.q
+        z1.q * z2.i + z1.q * -z2.q
+
+        i = z1.i * z2.i + z1.q * z2.q
+        q = z1.q * z2.i - z1.i * z2.q
+    */
+    float ic = i * sample.i + q * sample.q;
+    float qc = q * sample.i - i * sample.q;
+    return complex(ic, qc);
+}
+
 
 complex& complex::operator+=(complex& sample)
 {
@@ -35,6 +71,13 @@ complex operator+(complex l_sample, const complex& r_sample)
 {
     l_sample.i += r_sample.i;
     l_sample.q += r_sample.q;
+    return l_sample;
+}
+
+complex operator-(complex l_sample, const complex& r_sample)
+{
+    l_sample.i -= r_sample.i;
+    l_sample.q -= r_sample.q;
     return l_sample;
 }
 
@@ -105,12 +148,12 @@ float complex::signal_power(complex& signal) const
 
 float complex::phase_rad()
 {
-    return atan2f(q, i);
+    return std::atan2(q, i);
 }
 
 float complex::phase_rad(complex& signal) const
 {
-    return atan2f(signal.q, signal.i);
+    return std::atan2(signal.q, signal.i);
 }
 
 float complex::phase_deg()

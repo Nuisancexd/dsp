@@ -13,6 +13,7 @@ private:
 public:
 
     signal() {}
+    signal(size_t N) { samples.reserve(N); samples.assign(N, complex(0.0f, 0.0f)); }
     explicit signal(std::vector<complex> samples_) : samples(std::move(samples_)) {}
     explicit signal(std::vector<complex> samples_, float sample_rate_) : samples(std::move(samples_)), sample_rate(sample_rate_) {}
 

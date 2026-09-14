@@ -1,10 +1,9 @@
 #include "freq_domain.h"
 
+#include "common.h"
+
 #include <cmath>
 #include <vector>
-
-#define TO_FLOAT(x) static_cast<float>(x)
-#define TO_INT(x) static_cast<int>(x)
 
 
 signal freq_domain::mv_average_freq_impulse(size_t M1, size_t M2, size_t N)
@@ -32,7 +31,7 @@ signal freq_domain::mv_average_freq_impulse(size_t M1, size_t M2, size_t N)
 }
 
 
-signal freq_domain::symmetric_fft(const signal& sign)
+signal freq_domain::symmetric_furie(const signal& sign)
 {
     size_t N = sign.size();
     signal xe(N);
@@ -51,12 +50,12 @@ signal freq_domain::symmetric_fft(const signal& sign)
     return xe;
 }
 
-signal freq_domain::anti_symmetric_fft(const signal& sign)
+signal freq_domain::anti_symmetric_furie(const signal& sign)
 {
     size_t N = sign.size();
     signal xo(N);
     xo[0].i = 0.0f;
-    xo[0].q = sign[0].i;
+    xo[0].q = sign[0].q;
 
     for(size_t i = 1; i < N; ++i)
     {

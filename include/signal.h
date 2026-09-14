@@ -17,12 +17,18 @@ public:
     explicit signal(std::vector<complex> samples_) : samples(std::move(samples_)) {}
     explicit signal(std::vector<complex> samples_, float sample_rate_) : samples(std::move(samples_)), sample_rate(sample_rate_) {}
 
-    size_t size() { return samples.size(); }
     size_t size() const { return samples.size(); }
-    bool empty() { return samples.empty(); }
     bool empty() const { return samples.empty(); }
-    float get_sample_rate() { return sample_rate; }
     float get_sample_rate() const { return sample_rate; }
+
+    std::vector<complex>& get_samples() { return samples; }
+    std::vector<float> get_real_samples()
+    {
+        std::vector<float> rsamples(samples.size());
+        for(size_t i = 0; i < samples.size(); ++i)
+            rsamples[i] = samples[i].i;
+        return rsamples;
+    } 
 
     complex& operator[](size_t i) { return samples[i]; }
     const complex& operator[](size_t i) const { return samples[i]; }

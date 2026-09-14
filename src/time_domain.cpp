@@ -1,14 +1,13 @@
 #include "time_domain.h"
 
+#include "common.h"
+
 #include <complex.h>
 
 #include <cmath>
 #include <stdexcept>
 #include <vector>
 
-
-#define TO_FLOAT(x) static_cast<float>(x)
-#define TO_INT(x) static_cast<int>(x)
 
 signal time_domain::impulse(size_t size, size_t position, size_t sample_rate, complex amplitude)
 {

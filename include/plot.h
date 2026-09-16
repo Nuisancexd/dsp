@@ -24,9 +24,10 @@ public:
     static std::vector<double> time_axis(const signal& s);
     static std::vector<double> freq_axis(const signal& s);
 
-    static void plot(const signal& s, const char* title);
+    static void plot(const signal& s, const char* title, int x_pos = 100, int y_pos = 100);
+    static void plot_stem(const signal& s, const char* title, int x_pos, int y_pos);
     static void plot_complex(const signal& s, const char* title);
-    static void plot_amplitude(const signal& s, const char* title);
+    static void plot_amplitude(const signal& s, const char* title, int x_pos = 100, int y_pos = 100);
     static void plot_spec(const signal& s, const char* title);
 };
 

@@ -47,28 +47,47 @@ std::vector<double> plot_config::time_axis(const signal& s)
 
 std::vector<double> freq_axis(const signal& s);
 
-void plot_config::plot(const signal& s, const char* title)
+void plot_config::plot(const signal& s, const char* title, int x_pos, int y_pos)
 {
     auto x = index_axis(s);
     auto y = get_real(s);
- 
+    auto fig = matplot::figure();
+    /*need sudo permission for move win*/
+    fig->x_position(x_pos);
+    fig->y_position(y_pos);
     matplot::plot(x, y);
     matplot::xlabel("n");
     matplot::ylabel("x[n]");
     matplot::title(title);
     matplot::grid(true);
-    matplot::show();
 }
 
-void plot_config::plot_amplitude(const signal &s, const char *title)
+void plot_config::plot_amplitude(const signal &s, const char *title, int x_pos, int y_pos)
 {
     auto x = index_axis(s);
     auto y = get_ampl(s);
- 
+    auto fig = matplot::figure();
+    /*need sudo permission for move win*/
+    fig->x_position(x_pos);
+    fig->y_position(y_pos);
     matplot::plot(x, y);
     matplot::xlabel("n");
     matplot::ylabel("x[n]");
     matplot::title(title);
     matplot::grid(true);
-    matplot::show();
+}
+
+void plot_config::plot_stem(const signal& s, const char* title, int x_pos, int y_pos)
+{
+    auto x = index_axis(s);
+    auto y = get_real(s);
+    auto fig = matplot::figure();
+    /*need sudo permission for move win*/
+    fig->x_position(x_pos);
+    fig->y_position(y_pos);
+    matplot::stem(x, y)->marker_size(10);
+    matplot::xlabel("n");
+    matplot::ylabel("x[n]");
+    matplot::title(title);
+    matplot::grid(true);
 }

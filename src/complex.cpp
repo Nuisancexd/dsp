@@ -2,6 +2,18 @@
 
 #include <cmath>
 
+complex complex::exp() const
+{
+    float exp_re = std::exp(i);
+    return complex(exp_re * std::cos(q), exp_re * std::sin(q));
+}
+
+complex complex::exp(const complex& sample)
+{
+    float exp_re = std::exp(sample.i);
+    return complex(exp_re * std::cos(sample.q), exp_re * std::sin(sample.q));
+}
+
 complex& complex::conj_in()
 {
     q = -q;

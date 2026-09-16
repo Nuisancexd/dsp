@@ -17,6 +17,12 @@ signal time_domain::impulse(size_t size, size_t position, size_t sample_rate, co
     return signal(std::move(samples), sample_rate);
 }
 
+void time_domain::add_impulse(signal& s, size_t position_indx, complex amplitude)
+{
+    if(s.size() > position_indx)
+        s[position_indx] = amplitude;
+}
+
 signal time_domain::sum_shifted_impulse(size_t size, size_t position, size_t sample_rate, complex amplitude)
 {
     std::vector<complex> samples(size);

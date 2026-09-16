@@ -23,6 +23,8 @@ public:
 
     void zero_sample() { i = 0.0f; q = 0.0f; };
 
+    complex exp() const;
+    static complex exp(const complex& sample);
     complex& conj_in();
     complex conj() const;
     complex& conj_mult_in(const complex& sample);

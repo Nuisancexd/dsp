@@ -6,6 +6,7 @@
 namespace time_domain
 {
     signal impulse(size_t size, size_t position, size_t sample_rate = 1.0f, complex sample_sig = {1.0f, 0.0f});
+    void add_impulse(signal& s, size_t position_indx, complex amplitude);
     signal sum_shifted_impulse(size_t size, size_t position, size_t sample_rate = 1.0f, complex sample_sig = {1.0f, 0.0f});
     signal cumulative_sum_impulse(size_t size, size_t position, size_t sample_rate = 1.0f, complex sample_sig = {1.0f, 0.0f});
     signal triangular_pulse(size_t size, size_t N, size_t sample_rate, complex sample_sig);

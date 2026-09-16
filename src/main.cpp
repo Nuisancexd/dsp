@@ -12,24 +12,16 @@
 
 int main()
 {
-    size_t freq_hz_signal = 2;
-    size_t sample_rate = 35;
-    complex complex_rx(1, 0);
-    //auto t = signal_generator::triangular_pulse(30, 10, 1, complex_rx);
-    auto t = time_domain::sinusoid(40, freq_hz_signal, sample_rate, 1.f, 0.0f);
+    size_t freq_hz_signal = 1;
+    size_t sample_rate = freq_hz_signal * 10;
+    auto t = time_domain::exponential(100, freq_hz_signal, sample_rate, 1.f, 0.0f);
+    auto h = time_domain::impulse(10, 0, sample_rate, complex(0.8f, 0.0f));
+    time_domain::add_impulse(h, 5, complex(0.4f, 0.0f));
+    time_domain::add_impulse(h, 9, complex(0.2f, 0.0f));    
+    signal out = time_domain::convolve(t, h);
 
-    //size_t N = time_domain::signal_period(freq_hz_signal, sample_rate);
-    // if(time_domain::is_signal_periodic(t, N))
-    //     printf("true\n");
-    // else
-    //     printf("false\n");
-
-    //auto h = signal_generator::impulse(10, 0, sample_rate, complex(0.5f, 0.0f));
-    auto h = time_domain::impulse(10, 9, sample_rate, complex(0.5f, 0.0f));
-    auto h2 = time_domain::impulse(300, 10, sample_rate, complex(0.2f, 0.0f));
-    auto hn = time_domain::cascade_impulse_parallel(h, h);
-    auto tr = time_domain::cumulative_sum_impulse(30, 10, 1, complex_rx);
-    signal out = time_domain::convolve(t, h2);
-
-    plot_config::plot(out, "clown");
+    plot_config::plot(t, "signal", 1200, 100);
+    plot_config::plot(out, "out", 100, 100);
+    plot_config::plot_stem(h, "h", 650, 100);
+    getchar();
 }

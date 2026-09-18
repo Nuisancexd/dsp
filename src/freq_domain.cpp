@@ -5,6 +5,8 @@
 #include <cmath>
 #include <vector>
 
+#include "fftw3.h"
+
 
 signal freq_domain::mv_average_freq_impulse(size_t M1, size_t M2, size_t N)
 {
@@ -67,4 +69,63 @@ signal freq_domain::anti_symmetric_furie(const signal& sign)
     }
 
     return xo;
+}
+
+signal freq_domain::dft(const signal& x)
+{
+    const size_t N = x.size();
+    std::vector<complex> X(N);
+
+    for(size_t k = 0; k < N; ++k)
+    {
+        complex sum{};
+        for(size_t n = 0; n < N; ++n)
+        {
+            float phase = -2.0f * M_PI * TO_FLOAT(k * n) / TO_FLOAT(N);
+            complex sample(std::cos(phase), std::sin(phase));
+
+            sum += x[n] * sample;
+            //printf("%f\t%f\t%f\n", sum.i, sum.q, phase);
+        }
+
+        X[k] = sum;
+    }
+
+    return signal(std::move(X));
+}
+
+signal freq_domain::idft(const signal& x)
+{
+    const size_t N = x.size();
+    std::vector<complex> X(N);
+
+    for(size_t k = 0; k < N; ++k)
+    {
+        complex sum{};
+        for(size_t n = 0; n < N; ++n)
+        {
+            float phase = 2.0f * M_PI * TO_FLOAT(k * n) / TO_FLOAT(N);
+            complex sample(std::cos(phase), std::sin(phase));
+
+            sum += x[n] * sample;
+            //printf("%f\t%f\t%f\n", sum.i, sum.q, phase);
+        }
+
+        X[k] = sum;
+    }
+
+    return signal(std::move(X));
+}
+
+
+signal fft_forward(const signal& ts)
+{
+    std::vector<complex> fsamples;
+    
+}
+
+signal fft_backward(const signal& ts)
+{
+
+    
 }

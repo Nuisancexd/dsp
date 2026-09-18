@@ -50,7 +50,7 @@ complex complex::conj_mult(const complex& sample) const
 }
 
 
-complex& complex::operator+=(complex& sample)
+complex& complex::operator+=(const complex& sample)
 {
     i += sample.i;
     q += sample.q;

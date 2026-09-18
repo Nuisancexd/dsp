@@ -1,8 +1,8 @@
 CC = g++
 FLAGS = -O3 -std=c++20 -fsanitize=address -pthread -Iinclude 
-LDFLAGS = -lmatplot -lnodesoup
+LDFLAGS = -lmatplot -lnodesoup -lfftw3f
 vpath %.cpp src
-SRC = main.cpp complex.cpp signal.cpp time_domain.cpp plot.cpp
+SRC = main.cpp complex.cpp signal.cpp time_domain.cpp freq_domain.cpp plot.cpp
 
 OBJ = $(SRC:.cpp=.o)
 EXEC = dsplib

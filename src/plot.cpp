@@ -5,7 +5,7 @@
 using namespace matplot;
 
 
-std::vector<double> plot_config::get_real(const signal& s)
+std::vector<double> plot_config::real_axis(const signal& s)
 {
     std::vector<double> vec(s.size());
     for(size_t i = 0; i < s.size(); ++i)
@@ -13,7 +13,7 @@ std::vector<double> plot_config::get_real(const signal& s)
     return vec;
 }
 
-std::vector<double> plot_config::get_imag(const signal& s)
+std::vector<double> plot_config::imag_axis(const signal& s)
 {
     std::vector<double> vec(s.size());
     for(size_t i = 0; i < s.size(); ++i)
@@ -21,7 +21,7 @@ std::vector<double> plot_config::get_imag(const signal& s)
     return vec;
 }
 
-std::vector<double> plot_config::get_ampl(const signal& s)
+std::vector<double> plot_config::ampl_axis(const signal& s)
 {
     std::vector<double> vec(s.size());
     for(size_t i = 0; i < s.size(); ++i)
@@ -45,47 +45,46 @@ std::vector<double> plot_config::time_axis(const signal& s)
     return vec;
 }
 
-std::vector<double> freq_axis(const signal& s);
-
-void plot_config::plot(const signal& s, const char* title, int x_pos, int y_pos)
+std::vector<double> plot_config::freq_axis(const signal& s)
 {
-    auto x = index_axis(s);
-    auto y = get_real(s);
-    auto fig = matplot::figure();
-    /*need sudo permission for move win*/
-    fig->x_position(x_pos);
-    fig->y_position(y_pos);
-    matplot::plot(x, y);
-    matplot::xlabel("n");
-    matplot::ylabel("x[n]");
-    matplot::title(title);
-    matplot::grid(true);
+    float bin = s.get_sample_rate() / s.size();
+    std::vector<double> vec(s.size());
+    for(size_t i = 0; i < s.size(); ++i)
+        vec[i] = TO_DOUBLE(i * bin);
+    return vec;
 }
 
-void plot_config::plot_amplitude(const signal &s, const char *title, int x_pos, int y_pos)
+void plot_config::plot(const signal& s, const char* title, int x_pos, int y_pos, AXIS ax, STYLE style)
 {
-    auto x = index_axis(s);
-    auto y = get_ampl(s);
-    auto fig = matplot::figure();
-    /*need sudo permission for move win*/
-    fig->x_position(x_pos);
-    fig->y_position(y_pos);
-    matplot::plot(x, y);
-    matplot::xlabel("n");
-    matplot::ylabel("x[n]");
-    matplot::title(title);
-    matplot::grid(true);
-}
+    std::vector<double> x;
+    switch (ax) 
+    {
+    case AXIS::REAL:
+        x = real_axis(s);
+        break;
+    case AXIS::IMAG:
+        x = imag_axis(s);
+        break;
+    case AXIS::INDEX:
+        x = index_axis(s);
+        break;
+    case AXIS::TIME:
+        x = time_axis(s);
+        break;
+    case AXIS::FREQ:
+        x = freq_axis(s);
+        break;
+    };
 
-void plot_config::plot_stem(const signal& s, const char* title, int x_pos, int y_pos)
-{
-    auto x = index_axis(s);
-    auto y = get_real(s);
+    auto y = real_axis(s);
     auto fig = matplot::figure();
     /*need sudo permission for move win*/
     fig->x_position(x_pos);
     fig->y_position(y_pos);
-    matplot::stem(x, y)->marker_size(10);
+    if(style == STYLE::LINE)
+        matplot::plot(x, y);
+    else if(style == STYLE::STEM)
+        matplot::stem(x, y);
     matplot::xlabel("n");
     matplot::ylabel("x[n]");
     matplot::title(title);

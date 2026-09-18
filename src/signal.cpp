@@ -64,9 +64,29 @@ signal signal::mult_signals(const signal& lsig, const signal& rsig)
     if(sz > rsig.size())
         sz = rsig.size();
 
-    signal sret;
+    signal sret(lsig.size(), lsig.sample_rate);
     for(int i = 0; i < sz; ++i)
         sret[i] = lsig[i] * rsig[i];
 
     return sret;
+}
+
+signal& signal::operator+=(signal& s)
+{
+    for(size_t i = 0; i < samples.size(); ++i)
+        samples[i] += s[i];
+    return *this;
+}
+
+void signal::zero_samples()
+{
+    size_t bytes = samples.size() * sizeof(complex);
+    if(bytes == 0)
+        return;
+    volatile char* p = (volatile char*)samples.data();
+#if defined(__GNUC__)
+    //void* ptr = samples.data();    
+    asm volatile ("" : : "r"(p) : "memory");
+#endif
+    while (bytes--) *p++ = 0;
 }

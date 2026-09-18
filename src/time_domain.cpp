@@ -9,18 +9,10 @@
 #include <vector>
 
 
-signal time_domain::impulse(size_t size, size_t position, size_t sample_rate, complex amplitude)
-{
-    std::vector<complex> samples(size);
-    if(size > position)
-        samples[position] = amplitude;
-    return signal(std::move(samples), sample_rate);
-}
-
-void time_domain::add_impulse(signal& s, size_t position_indx, complex amplitude)
+void time_domain::impulse(signal& s, size_t position_indx, complex sample)
 {
     if(s.size() > position_indx)
-        s[position_indx] = amplitude;
+        s[position_indx] = sample;
 }
 
 signal time_domain::sum_shifted_impulse(size_t size, size_t position, size_t sample_rate, complex amplitude)
@@ -108,18 +100,16 @@ signal time_domain::sinc_pulse(size_t size, size_t N, size_t sample_rate, comple
     return signal(std::move(samples), sample_rate);
 }
 
-signal time_domain::exponential(size_t size, size_t freq_hz, size_t sample_rate, float amplitude, float phase_rad)
+void time_domain::exponential(signal& s, size_t freq_hz, size_t sample_rate, float amplitude, float phase_rad)
 {
-    std::vector<complex> samples(size);
     const float omega = 2.0f * TO_FLOAT(M_PI) * TO_FLOAT(freq_hz) / TO_FLOAT(sample_rate);
     float phase;
-    for(size_t n = 0; n < size; ++n)
+
+    for(size_t n = 0; n < s.size(); ++n)
     {
         phase = omega * n + phase_rad;
-        samples[n] = complex(amplitude * cos(phase), amplitude * sin(phase));
+        s[n] += complex(amplitude * cos(phase), amplitude * sin(phase));
     }
-
-    return signal(std::move(samples), sample_rate);
 }
 
 signal time_domain::sinusoid(size_t size, size_t freq_hz, size_t sample_rate, float amplitude, float phase_rad)
@@ -213,3 +203,4 @@ signal time_domain::cascade_impulse_parallel(const signal& h1, const signal& h2)
 
     return signal(std::move(h), h1.get_sample_rate());
 }
+

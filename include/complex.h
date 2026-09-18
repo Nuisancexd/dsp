@@ -10,7 +10,7 @@ public:
     complex() : i(0.0f), q(0.0f) {}
     complex(float i_, float q_) : i(i_), q(q_) {}
 
-    complex& operator+=(complex& sample);
+    complex& operator+=(const complex& sample);
     complex& operator-=(const complex& sample);
     complex& operator*=(const complex& sample);
     complex& operator/=(complex& sample);

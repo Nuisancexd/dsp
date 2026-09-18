@@ -9,12 +9,27 @@ class signal
 {
 private:
     std::vector<complex> samples;
-    float sample_rate = 1.0f;
+    size_t sample_rate = 1;
 public:
 
-    signal() {}
-    signal(size_t N) { samples.reserve(N); samples.assign(N, complex(0.0f, 0.0f)); }
+    signal() {};
+
+    signal(size_t N, size_t sample_rate_) : sample_rate(sample_rate_) 
+    { 
+        samples.reserve(N); 
+        samples.assign(N, complex(0.0f, 0.0f));
+        zero_samples(); 
+    }
+
+    signal(size_t N) 
+    { 
+        samples.reserve(N); 
+        samples.assign(N, complex(0.0f, 0.0f)); 
+        zero_samples(); 
+    }
+
     explicit signal(std::vector<complex> samples_) : samples(std::move(samples_)) {}
+
     explicit signal(std::vector<complex> samples_, float sample_rate_) : samples(std::move(samples_)), sample_rate(sample_rate_) {}
 
     size_t size() const { return samples.size(); }
@@ -22,14 +37,8 @@ public:
     float get_sample_rate() const { return sample_rate; }
 
     std::vector<complex>& get_samples() { return samples; }
-    std::vector<float> get_real_samples()
-    {
-        std::vector<float> rsamples(samples.size());
-        for(size_t i = 0; i < samples.size(); ++i)
-            rsamples[i] = samples[i].i;
-        return rsamples;
-    } 
 
+    signal& operator+=(signal& s);
     complex& operator[](size_t i) { return samples[i]; }
     const complex& operator[](size_t i) const { return samples[i]; }
     
@@ -42,6 +51,7 @@ public:
 
     signal& operator*=(const signal& sig);
     signal mult_signals(const signal& lsig, const signal& rsig);
+    void zero_samples();
 };
 
 

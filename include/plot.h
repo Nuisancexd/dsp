@@ -17,18 +17,30 @@ public:
     plot_config& set_figure_size(int width, int height);
     void plot_obj(const signal& s, const char* title);
 
-    static std::vector<double> get_real(const signal& s);
-    static std::vector<double> get_imag(const signal& s);
-    static std::vector<double> get_ampl(const signal& s);
+    enum class AXIS
+    {
+        REAL, IMAG, INDEX, TIME, FREQ
+    };
+
+    enum class STYLE
+    {
+        LINE, STEM
+    };
+
+    static std::vector<double> real_axis(const signal& s);
+    static std::vector<double> imag_axis(const signal& s);
+    static std::vector<double> ampl_axis(const signal& s);
     static std::vector<double> index_axis(const signal& s);
     static std::vector<double> time_axis(const signal& s);
     static std::vector<double> freq_axis(const signal& s);
 
-    static void plot(const signal& s, const char* title, int x_pos = 100, int y_pos = 100);
-    static void plot_stem(const signal& s, const char* title, int x_pos, int y_pos);
-    static void plot_complex(const signal& s, const char* title);
-    static void plot_amplitude(const signal& s, const char* title, int x_pos = 100, int y_pos = 100);
-    static void plot_spec(const signal& s, const char* title);
+    static void plot(const signal& s, const char* title, int x_pos = 100, int y_pos = 100, AXIS ax = AXIS::INDEX, STYLE style = STYLE::LINE);
+
+    // static void plotf(const signal& s, const char* title, int x_pos = 100, int y_pos = 100);
+    // static void plot_stem(const signal& s, const char* title, int x_pos, int y_pos);
+    // static void plot_complex(const signal& s, const char* title);
+    // static void plot_amplitude(const signal& s, const char* title, int x_pos = 100, int y_pos = 100);
+    // static void plot_spec(const signal& s, const char* title);
 };
 
 #endif

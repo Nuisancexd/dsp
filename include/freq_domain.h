@@ -8,6 +8,8 @@ namespace freq_domain
     signal mv_average_freq_impulse(size_t M1, size_t M2, size_t N);
     signal symmetric_furie(const signal& sign);
     signal anti_symmetric_furie(const signal& sign);
+    signal dft(const signal& x);
+    signal idft(const signal& x);
 }
 
 #endif
